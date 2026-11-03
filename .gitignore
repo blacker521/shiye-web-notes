@@ -1,0 +1,11 @@
+node_modules/
+test-results/
+dist/
+.DS_Store
+*.zip
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crx

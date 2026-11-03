@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>拾页</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+  <header><div class="logo">拾</div><div><h1>拾页<span>WEB NOTES</span></h1><p>把阅读中的灵感，留在原处。</p></div><span class="local"><i></i>本地保存</span></header>
+  <section class="page"><span class="eyebrow">正在阅读</span><h2 id="page-title">正在连接当前网页…</h2><p id="page-url"></p><div id="count">选中正文，即可高亮并写下笔记</div></section>
+  <main>
+    <aside id="access-help" hidden><strong id="access-title">需要开启本地文件访问</strong><p id="access-description">在「拾页」扩展详情中开启「允许访问文件网址」，刷新文章后重新打开插件。</p><div><button id="extension-settings">打开扩展详情 ↗</button><button id="retry">重新检测</button></div></aside>
+    <button class="action primary" id="new-note" disabled><span class="icon">✎</span><span><strong>记一条笔记</strong><small>保存当前网页和阅读位置</small></span><span>↗</span></button>
+    <button class="action" id="capture" disabled><span class="icon">▣</span><span><strong>截图并标记</strong><small>截取当前可见区域，可裁剪、画框和箭头</small></span><span>↗</span></button>
+    <button class="action" id="page-notes" disabled><span class="icon">≡</span><span><strong>此页笔记</strong><small>查看标记，回到原文位置</small></span><span>↗</span></button>
+    <div id="status" role="status"></div>
+  </main>
+  <footer><button id="library">打开笔记库 <span>↗</span></button><button id="toggle" disabled title="暂时隐藏或显示当前页面的高亮">隐藏高亮</button></footer>
+  <script src="popup.js" type="module"></script>
+</body></html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>我的笔记 · 拾页</title>
+  <link rel="stylesheet" href="library.css">
+  <script src="library.js" type="module"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="library.html" aria-label="拾页首页"><span class="brand-symbol">拾</span><span>拾页<small>把灵感留在页边</small></span></a>
+    <div class="nav-label">我的收藏</div>
+    <nav id="type-nav" aria-label="笔记分类">
+      <button class="nav-item selected" data-type="all"><svg class="ui-icon nav-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#grid"></use></svg>全部笔记<span id="count-all" class="nav-count">0</span></button>
+      <button class="nav-item" data-type="highlight"><svg class="ui-icon nav-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#highlighter"></use></svg>文字高亮<span id="count-highlight" class="nav-count">0</span></button>
+      <button class="nav-item" data-type="page"><svg class="ui-icon nav-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#note"></use></svg>页面笔记<span id="count-page" class="nav-count">0</span></button>
+      <button class="nav-item" data-type="screenshot"><svg class="ui-icon nav-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#image"></use></svg>网页截图<span id="count-screenshot" class="nav-count">0</span></button>
+    </nav>
+    <div class="site-heading"><span class="nav-label">内容来源</span><button id="clear-site" class="text-button" hidden>重置</button></div>
+    <nav id="site-list" aria-label="按来源筛选"></nav>
+    <div class="sidebar-bottom"><span class="local-dot"></span>仅保存在这台设备上<p>所有笔记自动保存到浏览器本地。<br>定期导出备份，让灵感更安心。</p><button id="import-sidebar" class="button sidebar-import">↑ 导入已有笔记</button></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar"><span class="breadcrumb">我的空间 <span>/</span> 笔记库</span><span class="local-status"><span class="local-dot"></span>本地存储</span></header>
+    <section class="page-heading">
+      <div><div class="eyebrow">YOUR READING, REMEMBERED.</div><h1 id="page-title">我的笔记</h1><p>读过的好内容，和当时的好想法。</p></div>
+      <div class="heading-actions"><button id="import-button" class="button">↑ 导入</button><div class="export-wrap"><button id="export-button" class="button primary" aria-expanded="false" aria-controls="export-menu">↓ 导出笔记 <span class="chevron">⌄</span></button><div id="export-menu" class="export-menu" hidden><button id="export-json">JSON 完整备份<small>包含全部笔记、定位信息与截图</small></button><button id="export-markdown">Markdown 阅读版<small>导出全部文字，截图可单独下载</small></button></div></div></div>
+    </section>
+
+    <section class="summary" aria-label="笔记统计">
+      <div><svg class="ui-icon stat-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#note"></use></svg><span><strong id="stat-total">0</strong><small>条阅读记录</small></span></div>
+      <div><svg class="ui-icon stat-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#globe"></use></svg><span><strong id="stat-sites">0</strong><small>个内容来源</small></span></div>
+      <div><svg class="ui-icon stat-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#image"></use></svg><span><strong id="stat-images">0</strong><small>张标记截图</small></span></div>
+      <p>点滴记录，<br>慢慢成为自己的知识。</p>
+    </section>
+
+    <section class="toolbar" aria-label="搜索与排序">
+      <label class="search-box"><svg class="ui-icon search-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#search"></use></svg><input id="search" type="search" placeholder="搜索标题、摘录、笔记或网址…" autocomplete="off" aria-label="搜索笔记"><kbd>/</kbd></label>
+      <label class="sort-label">排序<select id="sort" aria-label="笔记排序"><option value="updated">最近更新</option><option value="created">最近收藏</option><option value="oldest">最早收藏</option></select></label>
+    </section>
+    <div class="results-heading"><h2 id="results-title">全部笔记</h2><span id="result-count">正在读取…</span><button id="reset-filters" class="text-button" hidden>清除筛选</button></div>
+    <div id="loading" class="empty-state" role="status"><div class="empty-icon"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#note"></use></svg></div><h2>正在打开你的笔记本</h2><p>读取本地保存的内容…</p></div>
+    <div id="empty" class="empty-state" hidden><div class="empty-icon"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="icons/ui.svg#pencil"></use></svg></div><h2 id="empty-title">第一条笔记，从下一次阅读开始</h2><p id="empty-description">打开任意文章，选中一段文字，用「拾页」记下重点与想法。<br>也可以点击扩展图标，保存整页笔记或截图。</p><button id="empty-reset" class="button" hidden>查看全部笔记</button></div>
+    <section id="note-grid" class="note-grid" aria-label="笔记列表"></section>
+    <footer class="library-footer"><span>拾页 · 阅读留下的痕迹</span><span>JSON 备份可在另一台设备导入恢复</span></footer>
+  </main>
+
+  <dialog id="detail-dialog" aria-labelledby="detail-title">
+    <div class="detail-head"><span id="detail-kind" class="type-tag"></span><button id="close-detail" class="icon-button" aria-label="关闭笔记">×</button></div>
+    <h2 id="detail-title"></h2><a id="detail-url" target="_blank" rel="noopener noreferrer"></a>
+    <div id="detail-date" class="detail-date"></div>
+    <blockquote id="detail-quote" class="detail-quote" hidden></blockquote>
+    <div id="detail-image-wrap" hidden><a id="detail-image-link" target="_blank" rel="noopener noreferrer" title="下载截图"><img id="detail-image" alt="已保存的网页标记截图"></a><button id="download-image" class="text-button">↓ 下载 PNG 截图</button></div>
+    <label class="field-label" for="detail-note">我的笔记</label><textarea id="detail-note" placeholder="记下你的理解、问题，或下一步想做的事…" rows="6"></textarea>
+    <fieldset class="color-field"><legend>标记颜色</legend><label title="暖黄"><input type="radio" name="color" value="yellow"><span class="color-dot yellow"></span>暖黄</label><label title="草绿"><input type="radio" name="color" value="green"><span class="color-dot green"></span>草绿</label><label title="天蓝"><input type="radio" name="color" value="blue"><span class="color-dot blue"></span>天蓝</label><label title="浅粉"><input type="radio" name="color" value="pink"><span class="color-dot pink"></span>浅粉</label></fieldset>
+    <p id="detail-error" class="detail-error" role="alert" hidden></p>
+    <div class="detail-actions"><button id="delete-note" class="button danger">删除</button><span class="action-spacer"></span><button id="open-source" class="button">↗ 回到原文位置</button><button id="save-note" class="button primary">保存笔记</button></div>
+  </dialog>
+  <input id="import-file" type="file" accept="application/json,.json" hidden>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

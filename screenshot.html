@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>截图工作台 · 拾页</title>
+  <link rel="stylesheet" href="screenshot.css">
+  <script src="screenshot.js" type="module"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="library.html" aria-label="打开拾页笔记库"><span class="brand-mark">拾</span><span>拾页 <span class="brand-divider">/</span> <small>截图工作台</small></span></a>
+    <div class="top-actions">
+      <span id="save-state" class="save-state">本地编辑，保存后进入笔记库</span>
+      <button id="download" class="button secondary" disabled>下载 PNG</button>
+      <button id="save" class="button primary" disabled>保存到笔记库 <span aria-hidden="true">↗</span></button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="editor" aria-label="截图标记编辑器">
+      <div class="editor-heading">
+        <div><span class="eyebrow">CAPTURE & ANNOTATE</span><h1>让重点，一目了然。</h1></div>
+        <span id="dimensions" class="dimensions">正在载入截图…</span>
+      </div>
+
+      <div class="toolbar" role="toolbar" aria-label="截图标记工具">
+        <div class="tool-group">
+          <button class="tool active" data-tool="rect" aria-pressed="true" title="矩形框（R）"><span class="tool-icon">▭</span><span>矩形</span></button>
+          <button class="tool" data-tool="arrow" aria-pressed="false" title="箭头（A）"><span class="tool-icon">↗</span><span>箭头</span></button>
+          <button class="tool" data-tool="pen" aria-pressed="false" title="画笔（P）"><span class="tool-icon">〰</span><span>画笔</span></button>
+          <button class="tool" data-tool="text" aria-pressed="false" title="文字（T）"><span class="tool-icon text-icon">T</span><span>文字</span></button>
+          <button class="tool" data-tool="crop" aria-pressed="false" title="裁剪（C）"><span class="tool-icon">⌗</span><span>裁剪</span></button>
+        </div>
+        <div class="tool-group appearance">
+          <label class="color-label" title="标记颜色"><span class="visually-hidden">标记颜色</span><input id="color" type="color" value="#e04f45"></label>
+          <label class="width-label">粗细 <select id="line-width" aria-label="标记粗细"><option value="2">细</option><option value="4" selected>中</option><option value="7">粗</option></select></label>
+        </div>
+        <div class="tool-group history-tools">
+          <button id="undo" class="icon-button" disabled title="撤销（Ctrl / ⌘ + Z）" aria-label="撤销">↶</button>
+          <button id="reset" class="text-button" disabled>重置</button>
+        </div>
+      </div>
+
+      <div id="tool-options" class="tool-options">
+        <span id="tool-hint">拖动鼠标，用矩形框标记重点。</span>
+        <label id="text-options" class="text-options" hidden>标注文字 <input id="annotation-text" type="text" maxlength="200" placeholder="输入后，点击截图放置" autocomplete="off"></label>
+        <button id="apply-crop" class="button mini" hidden disabled>应用裁剪</button>
+        <button id="cancel-crop" class="text-button" hidden>取消选区</button>
+      </div>
+
+      <div id="canvas-area" class="canvas-area" aria-busy="true">
+        <div id="loading" class="canvas-message"><span class="loading-dot"></span><p>正在准备你的阅读现场</p></div>
+        <div id="load-error" class="canvas-message error-message" role="alert" hidden><strong>暂时无法打开这张截图</strong><p id="load-error-text"></p><a href="library.html">前往笔记库 →</a></div>
+        <canvas id="canvas" tabindex="0" aria-label="截图画布；选择工具后拖动绘制，文字工具点击放置" hidden></canvas>
+      </div>
+      <div class="editor-footer"><span>当前可视区域截图 · 可继续裁剪</span><span>⌘ / Ctrl + Z 撤销 <span class="footer-divider">·</span> Esc 取消绘制</span></div>
+    </section>
+
+    <aside class="note-panel">
+      <div class="panel-label"><span class="green-dot"></span>为这张截图留点想法</div>
+      <h2>读到这里，我想到…</h2>
+      <label for="note" class="visually-hidden">截图笔记</label>
+      <textarea id="note" placeholder="记录理解、疑问，或者下一步要做的事。" maxlength="20000" disabled></textarea>
+      <span id="note-count" class="note-count">0 / 20000</span>
+
+      <div class="source-card">
+        <span class="eyebrow">阅读现场</span>
+        <h3 id="source-title">正在读取原文…</h3>
+        <a id="source-url" target="_blank" rel="noopener noreferrer"></a>
+        <div class="source-position"><span>原文位置</span><span id="source-position">—</span></div>
+        <p>保存原文 URL 和页面位置，之后可从笔记库直接跳回这里。</p>
+      </div>
+
+      <div class="local-note"><span aria-hidden="true">◈</span><p>图片与笔记保存在本机浏览器。你也可以在笔记库导出完整备份。</p></div>
+      <a id="open-library" class="open-library" href="library.html" hidden>已保存，打开笔记库 <span aria-hidden="true">↗</span></a>
+    </aside>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
