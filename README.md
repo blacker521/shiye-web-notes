@@ -8,7 +8,7 @@
 
 ## 安装（不需要 npm 或构建）
 
-从 [GitHub Releases](https://github.com/blacker521/shiye-web-notes/releases) 下载源码加载包，解压后按下列步骤加载。当前使用开发者模式安装，尚未在 Chrome 商店上架。
+从 [GitHub Releases](https://github.com/blacker521/shiye-web-notes/releases) 下载 `shiye-extension-v1.0.0.zip`（精简插件）或 `shiye-web-notes-v1.0.0.zip`（完整源码），解压后按下列步骤加载。当前使用开发者模式安装，尚未在 Chrome 商店上架。
 
 1. 直接使用本目录；如果使用 ZIP，请先解压，找到包含 `manifest.json` 的 `web-notes-extension` 文件夹。
 2. Chrome 地址栏打开 `chrome://extensions`；Edge 打开 `edge://extensions`。

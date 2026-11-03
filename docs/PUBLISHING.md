@@ -11,7 +11,7 @@ npm run package
 ```
 
 - `dist/shiye-web-notes-v1.0.0.zip`：源码和本地加载包，解压后进入包含 manifest.json 的目录。
-- `dist/shiye-chrome-web-store-v1.0.0.zip`：商店上传包，ZIP 根目录直接包含 manifest.json，只包含运行资源与图标。
+- `dist/shiye-extension-v1.0.0.zip`：精简插件安装包，ZIP 根目录直接包含 manifest.json，只包含运行资源与图标。解压后可直接加载；相同格式也满足未来商店上传结构要求。
 - `dist/SHA256SUMS.txt`：校验和。
 
 浏览器流程检查见 README。发布包不要包含 .git、node_modules、test-results、备份文件、私人截图、环境凭据和本机账号数据。
@@ -23,7 +23,7 @@ npm run package
 ## Chrome 商店
 
 1. 打开 [开发者后台](https://chrome.google.com/webstore/devconsole)。如未注册，账号所有者需亲自阅读协议并处理注册费。
-2. 创建新条目，上传 `shiye-chrome-web-store-v1.0.0.zip`。
+2. 创建新条目，上传 `shiye-extension-v1.0.0.zip`。
 3. 按 [商店文案](STORE_LISTING.md) 填名称、说明、支持网址、类别与语言。
 4. 提供128×128 PNG图标和至少一张截图。截图用1280×800或640×400，PNG为无Alpha或JPEG；可选小型宣传图440×280。上传前按 [官方图片要求](https://developer.chrome.com/docs/webstore/images) 核对。
 5. 填单一用途、权限理由、远程代码和数据使用说明；公开提供 [隐私政策](../PRIVACY.md)，与实际实现和商店申报一致。

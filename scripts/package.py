@@ -1,4 +1,4 @@
-"""Build source and Chrome Web Store archives using explicit runtime files."""
+"""Build source and installable extension archives using explicit runtime files."""
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 import hashlib
@@ -19,7 +19,7 @@ runtime += [str(p.relative_to(root)) for p in (root / 'icons').iterdir() if p.su
 for name in runtime:
     if not (root / name).is_file():
         raise FileNotFoundError(name)
-store = dist / f'shiye-chrome-web-store-v{version}.zip'
+store = dist / f'shiye-extension-v{version}.zip'
 with ZipFile(store, 'w', ZIP_DEFLATED) as archive:
     for name in sorted(runtime):
         archive.write(root / name, name)
