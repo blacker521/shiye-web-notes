@@ -154,7 +154,15 @@ function renderCard(note) {
   const top = el('div', 'card-top');
   const typeTag = el('span', `type-tag ${note.type}`);
   typeTag.append(icon(typeIcons[note.type] || 'note'), document.createTextNode(labels[note.type] || '笔记'));
-  top.append(typeTag, el('time', 'card-date', dateOf(note.createdAt)));
+  const actions = el('div', 'card-top-actions');
+  const remove = el('button', 'card-delete');
+  remove.type = 'button';
+  remove.title = '删除这条笔记';
+  remove.setAttribute('aria-label', `删除笔记：${note.title || '未命名网页'}`);
+  remove.append(icon('trash'), el('span', '', '删除'));
+  remove.addEventListener('click', () => deleteNote(note, remove));
+  actions.append(el('time', 'card-date', dateOf(note.createdAt)), remove);
+  top.append(typeTag, actions);
   const heading = el('h3', 'card-title');
   const title = el('button', '', note.title || '未命名网页');
   title.addEventListener('click', () => openDetail(note));
@@ -188,6 +196,7 @@ function selectedColor() { return $('input[name="color"]:checked')?.value || 'ye
 function isDirty() { return state.current && ($('#detail-note').value !== (state.current.note || '') || selectedColor() !== (state.current.color || 'yellow')); }
 
 function openDetail(note) {
+  if (detailBusy) return;
   state.current = note;
   $('#detail-title').textContent = note.title || '未命名网页';
   $('#detail-kind').className = `type-tag ${note.type}`;
@@ -261,23 +270,37 @@ async function saveNote() {
   } finally { setDetailBusy(false); }
 }
 
-async function deleteNote() {
-  if (!state.current || detailBusy) return;
-  if (!confirm('确定删除这条笔记吗？已导出的备份文件不会受到影响。')) return;
+async function deleteNote(note = state.current, button) {
+  if (!note || detailBusy) return;
+  if (!confirm(`确定删除「${note.title || '未命名网页'}」这条笔记吗？\n删除后无法直接撤销，已导出的备份文件不会受到影响。`)) return;
   setDetailBusy(true);
+  if (button) {
+    button.disabled = true;
+    button.querySelector('span').textContent = '删除中…';
+  }
   try {
-    const id = state.current.id;
+    const id = note.id;
     await request('WN_DELETE', { id });
     state.notesRevision++;
     state.notes = state.notes.filter(note => note.id !== id);
     render();
-    state.current = null;
-    $('#detail-dialog').close();
+    if (state.current?.id === id) {
+      state.current = null;
+      $('#detail-dialog').close();
+    }
     notify('笔记已删除');
   } catch (error) {
-    $('#detail-error').hidden = false;
-    $('#detail-error').textContent = error.message;
-  } finally { setDetailBusy(false); }
+    if ($('#detail-dialog').open) {
+      $('#detail-error').hidden = false;
+      $('#detail-error').textContent = error.message;
+    } else notify(error.message, true);
+  } finally {
+    setDetailBusy(false);
+    if (button) {
+      button.disabled = false;
+      button.querySelector('span').textContent = '删除';
+    }
+  }
 }
 
 function dateStamp() {
@@ -414,7 +437,7 @@ $('#close-detail').addEventListener('click', closeDetail);
 $('#detail-dialog').addEventListener('cancel', event => { event.preventDefault(); closeDetail(); });
 $('#detail-dialog').addEventListener('close', () => { state.current = null; refresh(); });
 $('#save-note').addEventListener('click', saveNote);
-$('#delete-note').addEventListener('click', deleteNote);
+$('#delete-note').addEventListener('click', () => deleteNote());
 $('#open-source').addEventListener('click', () => { if (state.current) openSource(state.current, $('#open-source')); });
 $('#detail-url').addEventListener('click', event => {
   if (state.current && safeUrl(state.current.url)?.protocol === 'file:') {

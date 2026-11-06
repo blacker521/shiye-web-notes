@@ -40,7 +40,7 @@ The initial open-source release is **1.0.0**, including all current features and
 - **Page notes:** use the toolbar popup to record a thought about the page and save your current reading position.
 - **Screenshot annotations:** capture the **currently visible area**, then crop, draw rectangles and arrows, use the freehand pen, or add text. Undo, reset, save to the library, or download a PNG.
 - **Return to the source:** open a saved item from the library to visit its original URL and locate the marked passage. Cropped screenshots retain the crop's position within the source page.
-- **Search and organize:** search titles, quotations, notes, and URLs; filter by type or source; sort by time; edit notes and colors; preview images; or delete records. Press `/` to focus library search.
+- **Search and organize:** search titles, quotations, notes, and URLs; filter by type or source; sort by time; edit notes and colors; preview images; or delete a record directly from its card after confirmation. Press `/` to focus library search.
 - **Hide highlights:** temporarily hide or show highlights on the current page for that visit.
 
 Screenshot editor shortcuts:

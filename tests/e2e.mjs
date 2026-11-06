@@ -140,9 +140,52 @@ try {
   await library.screenshot({ path: path.join(results, 'library.png'), fullPage: true });
   await library.locator('#export-button').click(); const allBackupPromise = library.waitForEvent('download'); await library.locator('#export-json').click(); const allBackup = await allBackupPromise; const allPath = path.join(results, 'full-backup.json'); await allBackup.saveAs(allPath);
   const payload = JSON.parse(await readFile(allPath, 'utf8')); assert.equal(payload.notes.length, 2); assert.ok(payload.notes.find(n => n.type === 'screenshot').image);
-  // Clear through trusted extension UI, then actually restore full JSON including image bytes.
-  await library.evaluate(async () => { const { notes } = await chrome.runtime.sendMessage({ type: 'WN_LIST' }); for (const n of notes) await chrome.runtime.sendMessage({ type: 'WN_DELETE', id: n.id }); });
-  assert.equal((await list()).length, 0); await library.locator('#import-file').setInputFiles(allPath); await library.waitForTimeout(350); assert.equal((await list()).length, 2); assert.equal((await list()).find(n => n.id === shot.id).image, shot.image); pass('完整备份恢复文字、定位和截图字节');
+  // Exercise visible delete controls and their confirmation before restoring the backup.
+  await library.locator('#type-nav [data-type="screenshot"]').click();
+  assert.equal(await library.locator('.note-card').count(), 1);
+  library.once('dialog', async dialog => {
+    assert.equal(dialog.type(), 'confirm');
+    assert.ok(dialog.message().includes(shot.title));
+    assert.match(dialog.message(), /无法直接撤销/);
+    await dialog.dismiss();
+  });
+  await library.locator('.card-delete').click();
+  assert.equal((await list()).length, 2);
+  assert.equal(await library.locator('.note-card').count(), 1);
+  assert.equal(await library.locator('#detail-dialog').evaluate(dialog => dialog.open), false);
+  pass('卡片常显删除入口，取消确认不会删除或打开详情');
+  library.once('dialog', dialog => dialog.accept());
+  await library.locator('.card-delete').click();
+  await library.waitForFunction(() => document.querySelector('#stat-total').textContent === '1');
+  assert.deepEqual((await list()).map(note => note.id), [highlightId]);
+  assert.equal(await library.locator('#stat-images').textContent(), '0');
+  assert.equal(await library.locator('#count-screenshot').textContent(), '0');
+  assert.equal(await library.locator('#result-count').textContent(), '0 条记录');
+  assert.equal(await library.locator('#empty').isVisible(), true);
+  assert.equal(await library.locator('#search').inputValue(), '');
+  pass('分类筛选内删除截图，列表、空状态和统计同步更新');
+  await library.reload();
+  await library.locator('.note-card').waitFor();
+  assert.equal(await library.locator('.note-card').count(), 1);
+  assert.equal((await list()).some(note => note.id === shot.id), false);
+  pass('删除写入本地存储，刷新后记录不会重现');
+  await library.locator('.card-title button').click();
+  library.once('dialog', dialog => dialog.accept());
+  await library.locator('#delete-note').click();
+  await library.locator('#detail-dialog').waitFor({ state: 'hidden' });
+  await library.waitForFunction(() => document.querySelector('#stat-total').textContent === '0');
+  assert.equal((await list()).length, 0);
+  assert.equal(await library.locator('#stat-sites').textContent(), '0');
+  assert.equal(await library.locator('.site-button').count(), 0);
+  await library.waitForFunction(async sourceUrl => {
+    const tab = (await chrome.tabs.query({ url: sourceUrl }))[0];
+    return tab && (await chrome.tabs.sendMessage(tab.id, { type: 'WN_PING' })).count === 0;
+  }, page.url());
+  assert.equal(await shadow('.marks', 'function(){return this.getRootNode().querySelectorAll(".badge, .pin, .fallback").length}'), 0);
+  pass('详情删除仍可用，最后一条删除后清空来源与原网页标记');
+  await library.locator('#import-file').setInputFiles(allPath);
+  await library.waitForFunction(() => document.querySelector('#stat-total').textContent === '2');
+  assert.equal((await list()).length, 2); assert.equal((await list()).find(n => n.id === shot.id).image, shot.image); pass('完整备份恢复文字、定位和截图字节');
   await library.reload(); await library.locator('.note-card').nth(1).waitFor();
   const newPage = context.waitForEvent('page');
   await library.evaluate(id => chrome.runtime.sendMessage({ type: 'WN_OPEN_NOTE', id }), highlightId);

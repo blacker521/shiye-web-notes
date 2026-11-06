@@ -1,5 +1,5 @@
 const namespace = 'http://www.w3.org/2000/svg';
-const names = new Set(['grid', 'highlighter', 'note', 'image', 'globe', 'folder', 'search', 'pencil']);
+const names = new Set(['grid', 'highlighter', 'note', 'image', 'globe', 'folder', 'search', 'pencil', 'trash']);
 
 /** Bundled vectors render consistently without a font or an external icon service. */
 export function icon(name, className = '') {
